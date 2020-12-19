@@ -25,7 +25,7 @@ mod tests {
     use crate::util;
 
     #[test]
-    fn test() -> Result<()> {
+    fn test_example_1() -> Result<()> {
         assert_eq!(
             part1(util::example(1, 1).flat_map(|line| line.parse()))?,
             514579
@@ -34,7 +34,7 @@ mod tests {
     }
 
     #[test]
-    fn test2() -> Result<()> {
+    fn test_example_2() -> Result<()> {
         assert_eq!(
             part2(util::example(1, 1).flat_map(|line| line.parse()))?,
             241861950

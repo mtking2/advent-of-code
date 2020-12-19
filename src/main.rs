@@ -14,7 +14,7 @@ fn main() -> Result<()> {
     println!("{}", d1p2);
 
     println!("\nDay 2:");
-    day2::run(util::input(2))?;
+    day2::count_valid_passwords(util::input(2))?;
 
     Ok(())
 }
