@@ -1,5 +1,5 @@
-use itertools::Itertools;
 use crate::Result;
+use itertools::Itertools;
 
 pub fn part1<T: Iterator<Item = i32>>(expenses: T) -> Result<i32> {
     let result = expenses
