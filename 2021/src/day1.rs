@@ -6,7 +6,7 @@ pub fn part1<T: Iterator<Item = i32>>(mut measurements: T) -> Result<i32> {
     let mut prev_measurement = measurements.nth(0).unwrap();
 
     for measurement in measurements {
-        println!("{}, {}, {}", measurement, prev_measurement, count);
+        // println!("{}, {}, {}", measurement, prev_measurement, count);
         if measurement > prev_measurement {
             count += 1;
         }
