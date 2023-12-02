@@ -92,12 +92,11 @@ pub fn part1<T: Iterator<Item = String>>(data: T) -> Result<i32> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::util;
 
     #[test]
     fn test_example_1() -> Result<()> {
         assert_eq!(
-            part1(util::example(4, 1).flat_map(|line| line.parse()))?,
+            part1(aoc::example(2021, 4, 1).flat_map(|line| line.parse()))?,
             4512
         );
         Ok(())
@@ -106,7 +105,7 @@ mod tests {
 //    #[test]
 //    fn test_example_2() -> Result<()> {
 //        assert_eq!(
-//            part2(util::example(4, 1).flat_map(|line| line.parse()))?,
+//            part2(aoc::example(4, 1).flat_map(|line| line.parse()))?,
 //            1924
 //        );
 //        Ok(())
@@ -115,8 +114,8 @@ mod tests {
     #[test]
     fn part1_test() -> Result<()> {
         assert_eq!(
-            Some(part1(util::input(4).flat_map(|line| line.parse()))?),
-            util::answer(4, 1)
+            Some(part1(aoc::input(2021, 4).flat_map(|line| line.parse()))?),
+            aoc::answer(2021, 4, 1)
         );
         Ok(())
     }

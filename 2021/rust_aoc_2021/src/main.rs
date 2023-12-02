@@ -1,13 +1,13 @@
-use aoc_2021::day1;
-// use aoc_2021::day2;
-use aoc_2021::util;
-use aoc_2021::Result;
+use rust_aoc_2021::day1;
+// use rust_aoc_2021::day2;
+use aoc;
+use rust_aoc_2021::Result;
 
 fn main() -> Result<()> {
     println!("Hello, Advent of Code 2021!");
 
     println!("\nDay 1:");
-    let d1p1 = day1::part1(util::input(1).flat_map(|line| line.parse()))?;
+    let d1p1 = day1::part1(aoc::input(2021, 1).flat_map(|line| line.parse()))?;
     println!("{}", d1p1);
     // let d1p2 = day1::part2(util::input(1).flat_map(|line| line.parse()))?;
     // println!("{}", d1p2);

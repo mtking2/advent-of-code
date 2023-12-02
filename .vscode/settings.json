@@ -1,0 +1,8 @@
+{
+	"rust-analyzer.linkedProjects": [
+		"./rust_aoc/Cargo.toml",
+		"./2020/rust_aoc_2020/Cargo.toml",
+		"./2021/rust_aoc_2021/Cargo.toml",
+		"./2023/rust_aoc_2023/Cargo.toml",
+	]
+}

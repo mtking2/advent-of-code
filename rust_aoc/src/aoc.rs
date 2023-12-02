@@ -85,9 +85,9 @@ fn from_cache<T: FnOnce() -> Option<Vec<String>>>(
     Some(reader.lines().filter_map(Result::ok))
 }
 
-pub fn answer<T: std::str::FromStr>(day: u8, puzzle: usize) -> Option<T> {
+pub fn answer<T: std::str::FromStr>(year: u16, day: u8, puzzle: usize) -> Option<T> {
     from_cache(&format!("answer_{:02}_{}", day, puzzle), || {
-        fetch_aoc(&format!("/2020/day/{}", day))
+        fetch_aoc(&format!("/{}/day/{}", year, day))
             .filter_map(|line| {
                 line.split(|c| c == '<' || c == '>')
                     .skip_while(|s| s != &"Your puzzle answer was ")
@@ -103,16 +103,16 @@ pub fn answer<T: std::str::FromStr>(day: u8, puzzle: usize) -> Option<T> {
     .and_then(|answer| answer.parse().ok())
 }
 
-pub fn input(day: u8) -> impl Iterator<Item = String> {
+pub fn input(year: u16, day: u8) -> impl Iterator<Item = String> {
     from_cache(&format!("input_{:02}", day), move || {
-        Some(fetch_aoc(&format!("/2020/day/{}/input", day)).collect())
+        Some(fetch_aoc(&format!("/{}/day/{}/input", year, day)).collect())
     })
     .unwrap()
 }
 
-pub fn example(day: u8, example: usize) -> impl Iterator<Item = String> {
+pub fn example(year: u16, day: u8, example: usize) -> impl Iterator<Item = String> {
     from_cache(&format!("example_{:02}_{}", day, example), move || {
-        fetch_aoc(&format!("/2020/day/{}", day))
+        fetch_aoc(&format!("/{}/day/{}", year, day))
             .scan((false, Vec::new()), |state, line| {
                 let is_start = line.starts_with("<pre><code>");
                 let is_end = line.ends_with("</code></pre>");

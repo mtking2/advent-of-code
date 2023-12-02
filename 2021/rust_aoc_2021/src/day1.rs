@@ -36,12 +36,11 @@ pub fn part2<T: Iterator<Item = i32>>(measurements: T) -> Result<i32> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::util;
 
     #[test]
     fn test_example_1() -> Result<()> {
         assert_eq!(
-            part1(util::example(1, 1).flat_map(|line| line.parse()))?,
+            part1(aoc::example(2021, 1, 1).flat_map(|line| line.parse()))?,
             7
         );
         Ok(())
@@ -50,7 +49,7 @@ mod tests {
     #[test]
     fn test_example_2() -> Result<()> {
         assert_eq!(
-            part2(util::example(1, 1).flat_map(|line| line.parse()))?,
+            part2(aoc::example(2021, 1, 1).flat_map(|line| line.parse()))?,
             5
         );
         Ok(())
@@ -59,8 +58,8 @@ mod tests {
     #[test]
     fn part1_test() -> Result<()> {
         assert_eq!(
-            Some(part1(util::input(1).flat_map(|line| line.parse()))?),
-            util::answer(1, 1)
+            Some(part1(aoc::input(2021, 1).flat_map(|line| line.parse()))?),
+            aoc::answer(2021, 1, 1)
         );
         Ok(())
     }
@@ -68,8 +67,8 @@ mod tests {
     #[test]
     fn part2_test() -> Result<()> {
         assert_eq!(
-            Some(part2(util::input(1).flat_map(|line| line.parse()))?),
-            util::answer(1, 2)
+            Some(part2(aoc::input(2021, 1).flat_map(|line| line.parse()))?),
+            aoc::answer(2021, 1, 2)
         );
         Ok(())
     }

@@ -65,11 +65,10 @@ pub fn count_valid_passwords<T: Iterator<Item = String>, F: Fn(&str, &str) -> Re
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::util;
 
     #[test]
     fn test_example_part1() -> Result<()> {
-        let mut examples = util::example(2, 1);
+        let mut examples = aoc::example(2020, 2, 1);
 
         let e1 = examples.next().unwrap();
         let e2 = examples.next().unwrap();
@@ -90,7 +89,7 @@ mod tests {
 
     #[test]
     fn test_example_part2() -> Result<()> {
-        let mut examples = util::example(2, 1);
+        let mut examples = aoc::example(2020, 2, 1);
 
         let e1 = examples.next().unwrap();
         let e2 = examples.next().unwrap();
@@ -111,21 +110,21 @@ mod tests {
 
     #[test]
     fn test_example_count_valid_passwords_part1() -> Result<()> {
-        assert_eq!(count_valid_passwords(util::example(2, 1), is_valid_password_part1)?, 2);
+        assert_eq!(count_valid_passwords(aoc::example(2020, 2, 1), is_valid_password_part1)?, 2);
         Ok(())
     }
 
     #[test]
     fn test_example_count_valid_passwords_part2() -> Result<()> {
-        assert_eq!(count_valid_passwords(util::example(2, 1), is_valid_password_part2)?, 1);
+        assert_eq!(count_valid_passwords(aoc::example(2020, 2, 1), is_valid_password_part2)?, 1);
         Ok(())
     }
 
     #[test]
     fn part1_test() -> Result<()> {
         assert_eq!(
-            Some(count_valid_passwords(util::input(2), is_valid_password_part1)?),
-            util::answer(2, 1)
+            Some(count_valid_passwords(aoc::input(2020, 2), is_valid_password_part1)?),
+            aoc::answer(2020, 2, 1)
         );
         Ok(())
     }
@@ -133,8 +132,8 @@ mod tests {
     #[test]
     fn part2_test() -> Result<()> {
         assert_eq!(
-            Some(count_valid_passwords(util::input(2), is_valid_password_part2)?),
-            util::answer(2, 2)
+            Some(count_valid_passwords(aoc::input(2020, 2), is_valid_password_part2)?),
+            aoc::answer(2020, 2, 2)
         );
         Ok(())
     }
