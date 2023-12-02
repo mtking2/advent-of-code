@@ -1,7 +1,7 @@
 use rust_aoc_2021::day1;
 // use rust_aoc_2021::day2;
 use aoc;
-use rust_aoc_2021::Result;
+use aoc::Result;
 
 fn main() -> Result<()> {
     println!("Hello, Advent of Code 2021!");

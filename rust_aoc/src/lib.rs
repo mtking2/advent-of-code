@@ -1,6 +1,8 @@
 mod aoc;
 pub use self::aoc::*;
 
+pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>>;
+
 #[cfg(test)]
 mod tests {
     use super::*;

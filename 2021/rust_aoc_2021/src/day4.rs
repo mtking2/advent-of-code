@@ -1,4 +1,4 @@
-use crate::Result;
+use aoc::Result;
 use itertools::Itertools;
 use itertools::any;
 use itertools::all;

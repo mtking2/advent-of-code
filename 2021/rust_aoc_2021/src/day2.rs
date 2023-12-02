@@ -1,4 +1,4 @@
-use crate::Result;
+use aoc::Result;
 
 pub fn part1<T: Iterator<Item = String>>(movements: T) -> Result<i32> {
     let mut horizontal_position = 0;

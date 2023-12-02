@@ -1,6 +1,6 @@
+use aoc::Result;
 use rust_aoc_2020::day1;
 use rust_aoc_2020::day2;
-use rust_aoc_2020::Result;
 
 fn main() -> Result<()> {
     println!("Hello, Advent of Code!");

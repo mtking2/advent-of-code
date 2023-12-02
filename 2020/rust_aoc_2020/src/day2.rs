@@ -1,4 +1,4 @@
-use crate::Result;
+use aoc::Result;
 
 pub fn is_valid_password_part1(policy: &str, password: &str) -> Result<bool> {
     // println!("{}: {}", policy, password);

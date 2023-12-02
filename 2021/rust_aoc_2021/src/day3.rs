@@ -1,4 +1,4 @@
-use crate::Result;
+use aoc::Result;
 
 pub fn get_gamma_epsilon_rates(report: &Vec<String>) -> Result<(String, String)> {
     let mut gamma_counts = vec![0; *&report[0].chars().count()];

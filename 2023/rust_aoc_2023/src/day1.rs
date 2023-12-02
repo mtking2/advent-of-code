@@ -1,4 +1,4 @@
-use crate::Result;
+use aoc::Result;
 use regex::{Captures, Regex};
 
 pub fn part1<T: Iterator<Item = String>>(calibration_file: T) -> Result<i32> {

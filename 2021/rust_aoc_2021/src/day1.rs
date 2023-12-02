@@ -1,4 +1,4 @@
-use crate::Result;
+use aoc::Result;
 use itertools::Itertools;
 
 pub fn part1<T: Iterator<Item = i32>>(mut measurements: T) -> Result<i32> {
