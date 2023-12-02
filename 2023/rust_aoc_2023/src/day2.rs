@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use aoc::Result;
 
 fn get_cube_max_count(color: &str) -> Option<i16> {
@@ -14,9 +16,7 @@ fn is_game_possible(sets: &str) -> Result<bool> {
 
 	for set in sets.split(";").into_iter() {
 		for block_group in set.split(",").into_iter() {
-
 			let mut group_parts = block_group.split_whitespace();
-			println!("{:?}", group_parts);
 
 			let (count, color): (i16, &str) = (
 				group_parts.next().unwrap().parse()?,
@@ -67,6 +67,47 @@ pub fn part1<T: Iterator<Item = String>>(game_records: T) -> Result<i32> {
 	Ok(total)
 }
 
+fn get_game_power(sets: &str) -> Result<i32> {
+	let mut max_hash = HashMap::<&str, i32>::from([("red", 1), ("green", 1), ("blue", 1)]);
+	println!("max_hash: {:?}", max_hash);
+
+	for set in sets.split(";").into_iter() {
+		for block_group in set.split(",").into_iter() {
+			let mut group_parts = block_group.split_whitespace();
+
+			let (count, color): (i32, &str) = (
+				group_parts.next().unwrap().parse()?,
+				group_parts.next().unwrap(),
+			);
+
+			if &count > max_hash.get(color).unwrap() {
+				max_hash.insert(color, count);
+			}
+		}
+	}
+
+	// get the power of the game, meaning red_max * green_max * blue_max
+	let power = max_hash.values().product::<i32>();
+	Ok(power)
+}
+
+pub fn part2<T: Iterator<Item = String>>(game_records: T) -> Result<i32> {
+	let mut total = 0;
+	// get max count for each color for each game
+	for game in game_records {
+		let sets = game.split(':').last().unwrap().trim();
+		println!("sets: {:?}", sets);
+
+		let power = get_game_power(sets)?;
+		println!("power: {}", power);
+
+		// sum the powers of all games
+		total += power;
+	}
+
+	Ok(total)
+}
+
 #[cfg(test)]
 mod tests {
 	use super::*;
@@ -82,10 +123,28 @@ mod tests {
 	}
 
 	#[test]
+	fn test_example_2() -> Result<()> {
+		assert_eq!(
+			part2(aoc::example(YEAR, 2, 2).flat_map(|line| line.parse()))?,
+			2286
+		);
+		Ok(())
+	}
+
+	#[test]
 	fn part1_test() -> Result<()> {
 		assert_eq!(
 			Some(part1(aoc::input(YEAR, 2).flat_map(|line| line.parse()))?),
 			aoc::answer(YEAR, 2, 1)
+		);
+		Ok(())
+	}
+
+	#[test]
+	fn part2_test() -> Result<()> {
+		assert_eq!(
+			Some(part2(aoc::input(YEAR, 2).flat_map(|line| line.parse()))?),
+			aoc::answer(YEAR, 2, 2)
 		);
 		Ok(())
 	}
