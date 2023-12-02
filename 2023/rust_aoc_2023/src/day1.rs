@@ -67,9 +67,7 @@ pub fn part2<T: Iterator<Item = String>>(calibration_file: T) -> Result<i32> {
 		let parsed_string = re.replace_all(&line, |caps: &Captures| {
 			get_number(caps.get(0).unwrap().as_str()).unwrap().to_string()
 		});
-
 		println!("parsed_str: {:?}", parsed_string);
-
 
 		// get the first number
 		for char in parsed_string.chars() {
