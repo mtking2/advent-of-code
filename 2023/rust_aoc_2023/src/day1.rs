@@ -55,7 +55,6 @@ fn get_number(token: &str) -> Option<&str> {
 	}
 }
 
-
 pub fn part2<T: Iterator<Item = String>>(calibration_file: T) -> Result<i32> {
 	let mut total = 0;
 	for line in calibration_file {
@@ -65,7 +64,9 @@ pub fn part2<T: Iterator<Item = String>>(calibration_file: T) -> Result<i32> {
 
 		let re = Regex::new(r"(twone|oneight|threeight|fiveight|sevenine|eightwo|eighthree|nineight|one|two|three|four|five|six|seven|eight|nine)").unwrap();
 		let parsed_string = re.replace_all(&line, |caps: &Captures| {
-			get_number(caps.get(0).unwrap().as_str()).unwrap().to_string()
+			get_number(caps.get(0).unwrap().as_str())
+				.unwrap()
+				.to_string()
 		});
 		println!("parsed_str: {:?}", parsed_string);
 
@@ -94,26 +95,26 @@ pub fn part2<T: Iterator<Item = String>>(calibration_file: T) -> Result<i32> {
 
 #[cfg(test)]
 mod tests {
-    use crate::YEAR;
-    use super::*;
-
-    #[test]
-    fn test_example_1() -> Result<()> {
-        assert_eq!(
-            part1(aoc::example(YEAR, 1, 1).flat_map(|line| line.parse()))?,
-            142
-        );
-        Ok(())
-    }
+	use super::*;
+	use crate::YEAR;
 
 	#[test]
-    fn test_example_2() -> Result<()> {
-        assert_eq!(
-            part2(aoc::example(YEAR, 1, 2).flat_map(|line| line.parse()))?,
-            281
-        );
-        Ok(())
-    }
+	fn test_example_1() -> Result<()> {
+		assert_eq!(
+			part1(aoc::example(YEAR, 1, 1).flat_map(|line| line.parse()))?,
+			142
+		);
+		Ok(())
+	}
+
+	#[test]
+	fn test_example_2() -> Result<()> {
+		assert_eq!(
+			part2(aoc::example(YEAR, 1, 2).flat_map(|line| line.parse()))?,
+			281
+		);
+		Ok(())
+	}
 
 	#[test]
 	fn part1_test() -> Result<()> {

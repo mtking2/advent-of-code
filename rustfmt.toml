@@ -1,0 +1,14 @@
+# This is the default configuration for rustfmt.
+
+# Maximum width of each line.
+# max_width = 100
+
+# Use 4 spaces for indentation.
+# tab_spaces = 4
+
+# Use the default set of formatting rules.
+# You can customize these rules as needed.
+# See the rustfmt documentation for more details.
+# https://github.com/rust-lang/rustfmt
+
+hard_tabs = true
