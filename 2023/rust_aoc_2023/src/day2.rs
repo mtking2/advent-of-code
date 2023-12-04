@@ -1,6 +1,5 @@
-use std::collections::HashMap;
-
 use aoc::Result;
+use std::collections::HashMap;
 
 fn get_cube_max_count(color: &str) -> Option<i16> {
 	match color {
