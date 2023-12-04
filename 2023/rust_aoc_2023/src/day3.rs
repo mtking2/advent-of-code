@@ -25,30 +25,15 @@ pub fn part1<T: Iterator<Item = String>>(engine_schematic: T) -> Result<i32> {
 				// j is currently at the index after the last digit, or is the index of the last digit if at end of row
 				let mut is_part_number = false;
 
-				// let start_idx = cmp::max((j as isize - number_length), 0) as usize; // first index of the number
 				let start_idx = if j == row.len() - 1 && col.is_numeric() {
 					(j - number_length) + 1
 				} else {
 					cmp::max(j as isize - number_length as isize, 0) as usize
 				}; // first index of the number
-				let test_start_idx =
-					cmp::max((j as isize - number_length as isize) - 1, 0) as usize; // first index of the number - 1
 
+				let test_start_idx = cmp::max(start_idx as isize - 1, 0) as usize; // first index of the number - 1
 				let end_idx = if j == row.len() - 1 { j } else { j - 1 }; // last index of the number
 				let test_end_idx = j; // last index of the number + 1 (or last if at end of row)
-
-				// println!(
-				// 	"row:{}, ({},{}), test:({},{})",
-				// 	i, start_idx, end_idx, test_start_idx, test_end_idx
-				// );
-				// println!(
-				// 	"number:{}",
-				// 	row.iter()
-				// 		.skip(start_idx)
-				// 		.take(number_length as usize)
-				// 		.collect::<String>()
-				// );
-				// break;
 
 				// check if there is a symbol before the number
 				if start_idx != test_start_idx
@@ -56,7 +41,6 @@ pub fn part1<T: Iterator<Item = String>>(engine_schematic: T) -> Result<i32> {
 					&& row[test_start_idx] != '.'
 				{
 					is_part_number = true;
-					println!("symbol left of number");
 				}
 
 				// check if there is a symbol after the number
@@ -66,7 +50,6 @@ pub fn part1<T: Iterator<Item = String>>(engine_schematic: T) -> Result<i32> {
 					&& row[test_end_idx] != '.'
 				{
 					is_part_number = true;
-					println!("symbol right of number");
 				}
 
 				// check if there is a symbol above the number
@@ -76,7 +59,7 @@ pub fn part1<T: Iterator<Item = String>>(engine_schematic: T) -> Result<i32> {
 						let test_char = schematic_vec[i - 1][k];
 						if !test_char.is_numeric() && test_char != '.' {
 							is_part_number = true;
-							println!("symbol above number");
+							// println!("symbol above, char:{} ({},{})", test_char, i, k + 1);
 							break;
 						}
 					}
@@ -89,7 +72,7 @@ pub fn part1<T: Iterator<Item = String>>(engine_schematic: T) -> Result<i32> {
 						let test_char = schematic_vec[i + 1][k];
 						if !test_char.is_numeric() && test_char != '.' {
 							is_part_number = true;
-							println!("symbol below number");
+							// println!("symbol below, char:{} ({},{})", test_char, i + 2, k + 1);
 							break;
 						}
 					}
@@ -105,10 +88,11 @@ pub fn part1<T: Iterator<Item = String>>(engine_schematic: T) -> Result<i32> {
 						.collect::<String>()
 						.parse::<i32>()?;
 
-					println!(
-						"row:{}, number:{}, ({},{}), test:({},{})",
-						i, number, start_idx, end_idx, test_start_idx, test_end_idx
-					);
+					// println!(
+					// 	"row:{}, number:{}, len:{}, ({},{}), test:({},{})",
+					// 	i, number, number_length, start_idx, end_idx, test_start_idx, test_end_idx
+					// );
+
 					total += number;
 				}
 
@@ -123,6 +107,69 @@ pub fn part1<T: Iterator<Item = String>>(engine_schematic: T) -> Result<i32> {
 	Ok(total)
 }
 
+pub fn part2<T: Iterator<Item = String>>(engine_schematic: T) -> Result<i32> {
+	let schematic_vec = engine_schematic
+		.map(|line| line.chars().collect_vec())
+		.collect_vec();
+
+	let mut total = 0;
+
+	for (i, row) in schematic_vec.iter().enumerate() {
+		let mut number_length = 0;
+
+		for (j, col) in row.iter().enumerate() {
+			if col == &'*' {
+				// we have a *
+
+				// search all positions around the * for numbers in order
+				// 4 3 5
+				// 1 _ 2
+				// 7 6 8
+
+				let not_first_col = j > 0;
+				let not_last_col = j < row.len() - 1;
+				let not_first_row = i > 0;
+				let not_last_row = i < schematic_vec.len() - 1;
+
+				// 4 1 7 if not_first_col
+				// 5 2 8 if not_last_col
+				// 4 3 5 if not_first_row
+				// 7 6 8 if not_last_row
+
+				// if 1 is number loop backwards, inserting at begining of string, until we hit a non numeric and add to list
+				if not_first_col && schematic_vec[i][j - 1].is_numeric() {
+					let mut number = String::new();
+					let mut temp_j = j as isize - 1;
+
+					while temp_j >= 0 && schematic_vec[i][temp_j as usize].is_numeric() {
+						number.push(schematic_vec[i][temp_j as usize]);
+						temp_j -= 1;
+					}
+					number = number.chars().rev().collect::<String>();
+					println!("number:{}", number);
+				}
+
+				// if 2 is number loop forwards, appending to string, until we hit a non numeric and add to list
+				if not_last_col && schematic_vec[i][j + 1].is_numeric() {}
+
+				// if 3 is number loop backwards and forwards, inserting and appending to string
+				// else
+				// if 4 is number loop backwards
+				// if 5 is number loop forwards
+
+				// if 6 is number loop backwards and forwards
+				// else
+				// if 7 is number loop backwards
+				// if 8 is number loop forwards
+
+				// if number count == 2, then add gear ratio total
+				// else no-op
+			}
+		}
+	}
+	Ok(total)
+}
+
 #[cfg(test)]
 mod tests {
 	use super::*;
@@ -133,6 +180,15 @@ mod tests {
 		assert_eq!(
 			part1(aoc::example(YEAR, 3, 1).flat_map(|line| line.parse()))?,
 			4361
+		);
+		Ok(())
+	}
+
+	#[test]
+	fn test_example_2() -> Result<()> {
+		assert_eq!(
+			part2(aoc::example(YEAR, 3, 2).flat_map(|line| line.parse()))?,
+			467835
 		);
 		Ok(())
 	}
