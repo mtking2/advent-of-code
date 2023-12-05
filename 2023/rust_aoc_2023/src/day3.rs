@@ -107,6 +107,39 @@ pub fn part1<T: Iterator<Item = String>>(engine_schematic: T) -> Result<i32> {
 	Ok(total)
 }
 
+fn search_backward(
+	vector: &Vec<Vec<char>>,
+	i: usize,
+	mut j: isize,
+	number: &mut String,
+	numbers: &mut Vec<String>,
+) {
+	while j as isize >= 0 && vector[i][j as usize].is_numeric() {
+		number.push(vector[i][j as usize]);
+		j -= 1;
+	}
+	*number = number.chars().rev().collect::<String>();
+	println!("number:{}", number);
+	numbers.push(number.clone());
+	number.clear();
+}
+
+fn search_forward(
+	vector: &Vec<Vec<char>>,
+	i: usize,
+	mut j: isize,
+	number: &mut String,
+	numbers: &mut Vec<String>,
+) {
+	while j < vector[i].len() as isize && vector[i][j as usize].is_numeric() {
+		number.push(vector[i][j as usize]);
+		j += 1;
+	}
+	println!("number:{}", number);
+	numbers.push(number.clone());
+	number.clear();
+}
+
 pub fn part2<T: Iterator<Item = String>>(engine_schematic: T) -> Result<i32> {
 	let schematic_vec = engine_schematic
 		.map(|line| line.chars().collect_vec())
@@ -135,24 +168,31 @@ pub fn part2<T: Iterator<Item = String>>(engine_schematic: T) -> Result<i32> {
 				// 5 2 8 if not_last_col
 				// 4 3 5 if not_first_row
 				// 7 6 8 if not_last_row
+				let mut numbers = Vec::<String>::new();
+				let mut number = String::new();
+				let mut temp_j;
 
 				// if 1 is number loop backwards, inserting at begining of string, until we hit a non numeric and add to list
 				if not_first_col && schematic_vec[i][j - 1].is_numeric() {
-					let mut number = String::new();
-					let mut temp_j = j as isize - 1;
-
-					while temp_j >= 0 && schematic_vec[i][temp_j as usize].is_numeric() {
-						number.push(schematic_vec[i][temp_j as usize]);
-						temp_j -= 1;
-					}
-					number = number.chars().rev().collect::<String>();
-					println!("number:{}", number);
+					temp_j = j as isize - 1;
+					search_backward(&schematic_vec, i, temp_j, &mut number, &mut numbers);
 				}
 
 				// if 2 is number loop forwards, appending to string, until we hit a non numeric and add to list
-				if not_last_col && schematic_vec[i][j + 1].is_numeric() {}
+				if not_last_col && schematic_vec[i][j + 1].is_numeric() {
+					temp_j = j as isize + 1;
+					search_forward(&schematic_vec, i, temp_j, &mut number, &mut numbers);
+				}
 
 				// if 3 is number loop backwards and forwards, inserting and appending to string
+				if not_first_row && schematic_vec[i - 1][j].is_numeric() {
+					temp_j = j as isize - 1;
+					search_backward(&schematic_vec, i - 1, temp_j, &mut number, &mut numbers);
+
+					temp_j = j as isize + 1;
+					search_backward(&schematic_vec, i - 1, temp_j, &mut number, &mut numbers);
+					// loop forward
+				}
 				// else
 				// if 4 is number loop backwards
 				// if 5 is number loop forwards
