@@ -1,9 +1,9 @@
 use std::cmp;
 
-use aoc::Result;
+use aoc::Result as AocResult;
 use itertools::Itertools;
 
-pub fn part1<T: Iterator<Item = String>>(engine_schematic: T) -> Result<i32> {
+pub fn part1<T: Iterator<Item = String>>(engine_schematic: T) -> AocResult<i32> {
 	let schematic_vec = engine_schematic
 		.map(|line| line.chars().collect_vec())
 		.collect_vec();
@@ -107,40 +107,27 @@ pub fn part1<T: Iterator<Item = String>>(engine_schematic: T) -> Result<i32> {
 	Ok(total)
 }
 
-fn search_backward(
-	vector: &Vec<Vec<char>>,
-	i: usize,
-	mut j: isize,
-	number: &mut String,
-	numbers: &mut Vec<String>,
-) {
+fn search_backward(vector: &Vec<Vec<char>>, i: usize, mut j: isize, number: &mut String) {
 	while j as isize >= 0 && vector[i][j as usize].is_numeric() {
 		number.push(vector[i][j as usize]);
 		j -= 1;
 	}
 	*number = number.chars().rev().collect::<String>();
-	println!("number:{}", number);
-	numbers.push(number.clone());
-	number.clear();
 }
 
-fn search_forward(
-	vector: &Vec<Vec<char>>,
-	i: usize,
-	mut j: isize,
-	number: &mut String,
-	numbers: &mut Vec<String>,
-) {
+fn search_forward(vector: &Vec<Vec<char>>, i: usize, mut j: isize, number: &mut String) {
 	while j < vector[i].len() as isize && vector[i][j as usize].is_numeric() {
 		number.push(vector[i][j as usize]);
 		j += 1;
 	}
-	println!("number:{}", number);
+}
+
+fn store_number(number: &mut String, numbers: &mut Vec<String>) {
 	numbers.push(number.clone());
 	number.clear();
 }
 
-pub fn part2<T: Iterator<Item = String>>(engine_schematic: T) -> Result<i32> {
+pub fn part2<T: Iterator<Item = String>>(engine_schematic: T) -> AocResult<i32> {
 	let schematic_vec = engine_schematic
 		.map(|line| line.chars().collect_vec())
 		.collect_vec();
@@ -148,8 +135,6 @@ pub fn part2<T: Iterator<Item = String>>(engine_schematic: T) -> Result<i32> {
 	let mut total = 0;
 
 	for (i, row) in schematic_vec.iter().enumerate() {
-		let mut number_length = 0;
-
 		for (j, col) in row.iter().enumerate() {
 			if col == &'*' {
 				// we have a *
@@ -168,42 +153,73 @@ pub fn part2<T: Iterator<Item = String>>(engine_schematic: T) -> Result<i32> {
 				// 5 2 8 if not_last_col
 				// 4 3 5 if not_first_row
 				// 7 6 8 if not_last_row
+
 				let mut numbers = Vec::<String>::new();
 				let mut number = String::new();
-				let mut temp_j;
 
-				// if 1 is number loop backwards, inserting at begining of string, until we hit a non numeric and add to list
+				// if 1 is number search backwards, inserting at begining of string, until we hit a non numeric and add to list
 				if not_first_col && schematic_vec[i][j - 1].is_numeric() {
-					temp_j = j as isize - 1;
-					search_backward(&schematic_vec, i, temp_j, &mut number, &mut numbers);
+					search_backward(&schematic_vec, i, j as isize - 1, &mut number);
+					store_number(&mut number, &mut numbers);
 				}
 
-				// if 2 is number loop forwards, appending to string, until we hit a non numeric and add to list
+				// if 2 is number search forwards, appending to string, until we hit a non numeric and add to list
 				if not_last_col && schematic_vec[i][j + 1].is_numeric() {
-					temp_j = j as isize + 1;
-					search_forward(&schematic_vec, i, temp_j, &mut number, &mut numbers);
+					search_forward(&schematic_vec, i, j as isize + 1, &mut number);
+					store_number(&mut number, &mut numbers);
 				}
 
-				// if 3 is number loop backwards and forwards, inserting and appending to string
+				// if 3 is number search backwards and forwards, inserting and appending to string
 				if not_first_row && schematic_vec[i - 1][j].is_numeric() {
-					temp_j = j as isize - 1;
-					search_backward(&schematic_vec, i - 1, temp_j, &mut number, &mut numbers);
-
-					temp_j = j as isize + 1;
-					search_backward(&schematic_vec, i - 1, temp_j, &mut number, &mut numbers);
-					// loop forward
+					search_backward(&schematic_vec, i - 1, j as isize, &mut number);
+					search_forward(&schematic_vec, i - 1, j as isize + 1, &mut number);
+					store_number(&mut number, &mut numbers);
+				} else {
+					if not_first_row && not_first_col && schematic_vec[i - 1][j - 1].is_numeric() {
+						// if 4 is number search backwards
+						search_backward(&schematic_vec, i - 1, j as isize - 1, &mut number);
+						store_number(&mut number, &mut numbers);
+					}
+					if not_first_row && not_last_col && schematic_vec[i - 1][j + 1].is_numeric() {
+						// if 5 is number search forwards
+						search_forward(&schematic_vec, i - 1, j as isize + 1, &mut number);
+						store_number(&mut number, &mut numbers);
+					}
 				}
-				// else
-				// if 4 is number loop backwards
-				// if 5 is number loop forwards
 
-				// if 6 is number loop backwards and forwards
-				// else
-				// if 7 is number loop backwards
-				// if 8 is number loop forwards
+				// if 6 is number search backwards and forwards
+				if not_last_row && schematic_vec[i + 1][j].is_numeric() {
+					search_backward(&schematic_vec, i + 1, j as isize, &mut number);
+					search_forward(&schematic_vec, i + 1, j as isize + 1, &mut number);
+					store_number(&mut number, &mut numbers);
+				} else {
+					if not_last_row && not_first_col && schematic_vec[i + 1][j - 1].is_numeric() {
+						// if 7 is number search backwards
+						search_backward(&schematic_vec, i + 1, j as isize - 1, &mut number);
+						store_number(&mut number, &mut numbers);
+					}
+					if not_last_row && not_last_col && schematic_vec[i + 1][j + 1].is_numeric() {
+						// if 8 is number search forwards
+						search_forward(&schematic_vec, i + 1, j as isize + 1, &mut number);
+						store_number(&mut number, &mut numbers);
+					}
+				}
 
-				// if number count == 2, then add gear ratio total
-				// else no-op
+				println!("numbers:{:?}", numbers);
+
+				// if number count == 2, then add gear ratio to total
+				if numbers.len() == 2 {
+					let parsed_ints: Result<Vec<i32>, _> =
+						numbers.into_iter().map(|s| s.parse::<i32>()).collect();
+					match parsed_ints {
+						Ok(ints) => {
+							let gear_ratio: i32 = ints.iter().product();
+							total += gear_ratio;
+							println!("Gear ratio: {}", gear_ratio);
+						}
+						Err(e) => println!("Error parsing: {}", e),
+					}
+				}
 			}
 		}
 	}
@@ -216,7 +232,7 @@ mod tests {
 	use crate::YEAR;
 
 	#[test]
-	fn test_example_1() -> Result<()> {
+	fn test_example_1() -> AocResult<()> {
 		assert_eq!(
 			part1(aoc::example(YEAR, 3, 1).flat_map(|line| line.parse()))?,
 			4361
@@ -225,7 +241,7 @@ mod tests {
 	}
 
 	#[test]
-	fn test_example_2() -> Result<()> {
+	fn test_example_2() -> AocResult<()> {
 		assert_eq!(
 			part2(aoc::example(YEAR, 3, 2).flat_map(|line| line.parse()))?,
 			467835
@@ -234,10 +250,19 @@ mod tests {
 	}
 
 	#[test]
-	fn part1_test() -> Result<()> {
+	fn part1_test() -> AocResult<()> {
 		assert_eq!(
 			Some(part1(aoc::input(YEAR, 3).flat_map(|line| line.parse()))?),
 			aoc::answer(YEAR, 3, 1)
+		);
+		Ok(())
+	}
+
+	#[test]
+	fn part2_test() -> AocResult<()> {
+		assert_eq!(
+			Some(part2(aoc::input(YEAR, 3).flat_map(|line| line.parse()))?),
+			aoc::answer(YEAR, 3, 2)
 		);
 		Ok(())
 	}
