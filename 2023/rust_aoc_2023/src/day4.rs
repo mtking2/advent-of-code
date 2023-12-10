@@ -1,8 +1,4 @@
-use std::cmp;
-use std::iter;
-
 use aoc::Result as AocResult;
-use itertools::repeat_n;
 
 fn get_card_score(card: String) -> (u32, u32) {
 	let mut winning_count: u32 = 0;
@@ -54,7 +50,7 @@ pub fn part1<T: Iterator<Item = String>>(scratch_cards: T) -> AocResult<u32> {
 	let mut total: u32 = 0;
 
 	for scratch_card in scratch_cards {
-		let (winning_count, card_score) = get_card_score(scratch_card);
+		let (_winning_count, card_score) = get_card_score(scratch_card);
 
 		if card_score > 0 {
 			total += card_score;
@@ -64,48 +60,44 @@ pub fn part1<T: Iterator<Item = String>>(scratch_cards: T) -> AocResult<u32> {
 	Ok(total)
 }
 
-fn get_card_copies(cards: &Vec<(u32, u32)>) -> Vec<(u32, u32)> {
-	println!("cards: {:?}", cards);
-
-	if cards.len() == 0 {
-		return cards.clone();
-	}
-
+fn get_card_copies(
+	original_cards: &Vec<(u32, u32)>,
+	cards_to_copy: &Vec<(u32, u32)>,
+) -> Vec<(u32, u32)> {
 	let mut copies = <Vec<(u32, u32)>>::new();
 
-	for (i, card) in cards.iter().enumerate() {
-		let start_idx = cmp::min(i + 1, cards.len() - 1);
-		let end_idx = cmp::min(start_idx + card.1 as usize, cards.len() - 1);
-		println!("start_idx: {}, end_idx: {}", start_idx, end_idx);
+	for (_i, card) in cards_to_copy.iter().enumerate() {
+		let start_idx = card.0 as usize + 1;
+		let end_idx = start_idx + card.1 as usize;
 
-		let card_copies = &cards[start_idx..end_idx].to_vec();
-		println!("card_copies: {:?}", card_copies);
+		let card_copies = &original_cards[start_idx..end_idx].to_vec();
 
 		copies.extend(card_copies);
-		println!();
 	}
-	println!("copies: {:?}", copies);
-	copies.extend(get_card_copies(&copies));
+
+	copies.sort_by(|a, b| a.0.cmp(&b.0));
 	copies
 }
 
 pub fn part2<T: Iterator<Item = String>>(scratch_cards: T) -> AocResult<u32> {
-	let mut total: u32 = 0;
-
 	let mut cards = <Vec<(u32, u32)>>::new();
 
 	for (i, scratch_card) in (0u32..).zip(scratch_cards) {
 		let (winning_count, _card_score) = get_card_score(scratch_card);
 		cards.push((i, winning_count));
 	}
-	// println!("cards: {:?}", cards);
+	println!("cards: {:?}\n\n", cards);
 
-	let mut new_cards = get_card_copies(&cards);
+	let mut all_cards = cards.clone();
 
-	new_cards.sort_by(|a, b| a.0.cmp(&b.0));
+	let mut copies = get_card_copies(&cards, &cards);
 
-	println!("new_cards: {:?}", new_cards);
-	Ok(cards.len() as u32 + new_cards.len() as u32)
+	while copies.len() > 0 {
+		all_cards.extend(&copies);
+		copies = get_card_copies(&cards, &copies);
+	}
+
+	Ok(all_cards.len() as u32)
 }
 
 #[cfg(test)]
@@ -136,6 +128,15 @@ mod tests {
 		assert_eq!(
 			Some(part1(aoc::input(YEAR, 4).flat_map(|line| line.parse()))?),
 			aoc::answer(YEAR, 4, 1)
+		);
+		Ok(())
+	}
+
+	#[test]
+	fn part2_test() -> AocResult<()> {
+		assert_eq!(
+			Some(part2(aoc::input(YEAR, 4).flat_map(|line| line.parse()))?),
+			aoc::answer(YEAR, 4, 2)
 		);
 		Ok(())
 	}
