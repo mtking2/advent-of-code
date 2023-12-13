@@ -4,10 +4,9 @@ fn get_card_score(card: String) -> (u32, u32) {
 	let mut winning_count: u32 = 0;
 	let delimiters = &[':', '|'];
 
-	// let mut parts = scratch_card.split(':');
 	let mut parts = card.split(move |c| delimiters.contains(&c));
 
-	// Destructuring directly into two variables
+	// Destructuring directly into three variables
 	let (_card_title_str, winning_numbers_str, scratch_numbers_str) = if let (
 		Some(first),
 		Some(second),
@@ -31,14 +30,11 @@ fn get_card_score(card: String) -> (u32, u32) {
 		.map(|s| s.parse::<u32>().unwrap())
 		.collect();
 
-	// print!("winning_numbers: ");
 	for number in scratch_numbers {
 		if winning_numbers.contains(&number) {
 			winning_count += 1;
-			// print!("{} ", number);
 		}
 	}
-	// println!();
 	if winning_count > 0 {
 		(winning_count, 2u32.pow(winning_count - 1))
 	} else {
